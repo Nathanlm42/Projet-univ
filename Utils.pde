@@ -25,7 +25,6 @@ class Bancdepoisson
   {
     for (int i = 0; i < nbpoissons; i ++)
      {
-       poissons[i].deplacerversbary(bary);
       poissons[i].avancer();
      }
   }
@@ -34,27 +33,5 @@ class Bancdepoisson
   {
     for (int i = 0; i < nbpoissons; i ++)
       poissons[i].trouvervoisinspoisson(poissons);
-  }
-  void calculerbary()
-  {
-    int moyennex = 0;
-    int moyenney = 0; 
-    for (int i = 0; i < nbpoissons; i ++)
-    {
-      moyennex += poissons[i].pos.x;
-      moyenney += poissons[i].pos.y;
-    }
-    moyennex /= nbpoissons;
-    moyenney /= nbpoissons;
-    bary.x = moyennex;
-    bary.y = moyenney;
-  }
-  
-  void separation()
-  {
-    for (int i = 0; i < nbpoissons; i ++)
-    {
-      poissons[i].evitervoisins();
-    }
   }
 }

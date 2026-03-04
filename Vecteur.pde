@@ -31,6 +31,10 @@ class Vect
   {
     return (sqrt(pow(this.x, 2) + pow(this.y, 2)));
   }
+  Vect normalize()
+  {
+    return(new Vect(x/norm(), y/norm()));
+  }
   String toString()
   {
     return("x : " + this.x + '\n' + "y : " + this.y);
