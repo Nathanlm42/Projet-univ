@@ -17,8 +17,11 @@ class Fish {
 
   void dessiner()
   {
-    pos.x = (pos.x + width + vitesse.x)%width;
-    pos.y = (pos.y + height + vitesse.y)%height;
+    vitesse.norm();
+    pos.x = pos.x + vitesse.x;
+    pos.y = pos.y + vitesse.y;
+    pos.x = constrain(pos.x, 0, width);
+    pos.y = constrain(pos.y, 0, height);
     if (influ)
     {
       for (Fish voisin : voisins)
@@ -27,20 +30,29 @@ class Fish {
         line(voisin.pos.x, voisin.pos.y, pos.x, pos.y);
       }
     }
+    if (V)
+    {
+      line(pos.x, pos.y, pos.x + vitesse.x*width/10, pos.y + vitesse.y*width/10);
+    }
+    pushMatrix();
+    translate(pos.x, pos.y);
+    angle = atan2(vitesse.y, vitesse.x);
+    rotate(angle);
     fill(couleur);
-    image(fish, pos.x, pos.y, taille, taille);
+    image(fish, 0, 0, taille, taille);
     fill(255, 255, 255, 100);
     fill(0);
-    text(numero, pos.x, pos.y);
+    text(numero, 0, 0);
+    popMatrix();
   }
   void avancer()
   {
     vitesse.x = constrain(vitesse.x, -2, 2);
     vitesse.y = constrain(vitesse.y, -2, 2);
     alignement();
-    eviterbord();
     deplacerversbary(calculerbary());
     evitervoisins();
+    eviterbord();
   }
 
   void trouvervoisinspoisson(Fish poissons[])
@@ -122,6 +134,7 @@ class Fish {
   {
     int frontieres = 50;
     float coeff = 0.01;
+
     if (pos.x >= width - frontieres)
       vitesse.x += ((pos.x - width))*coeff;
     if (pos.x <= frontieres)

@@ -1,5 +1,5 @@
 Bancdepoisson bp;
-int G_nbpoisson = 500;
+int G_nbpoisson = 200;
 int zonevoisins = 500;
 float alignement = 0.02;
 float cohesion = 0.001;
@@ -13,6 +13,7 @@ void setup()
   bp = new Bancdepoisson(G_nbpoisson);
   dessinercommande();
   fish = loadImage("Poisson.png");
+  imageMode(CENTER);
 }
 
 
@@ -30,6 +31,7 @@ void dessinercommande()
   println("A et Q pour l'alignement : alignement actuel :" + alignement);
   println("Z et S pour la cohesion : cohesion actuel :" + cohesion);
   println("E et D pour la répulsion : repulsion actuel :" + repulsioncoeff);
+  println("Appuyez sur R et F pour modifier la zone d'influence :" + zonevoisins);
   println("Appuyez sur T pour afficher le réseau d'influence");
   println("Appuyez V pour voir les vecteurs vitesse");
 }
@@ -51,7 +53,11 @@ void keyPressed()
     repulsioncoeff -= offset;
   else if (key == 't' || key == 'T')
     influ = !influ;
-    else if (key == 'v' || key == 'V')
+  else if (key == 'v' || key == 'V')
     V = !V;
+  else if(key == 'R' ||key == 'r')
+    zonevoisins += 10;
+  else if (key == 'F' || key == 'f')
+    zonevoisins -= 10;
   dessinercommande();
 }
