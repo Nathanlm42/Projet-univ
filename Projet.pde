@@ -9,7 +9,7 @@ boolean V = false;
 PImage fish;
 void setup()
 {
-  size(1000, 1000);
+  size(1000, 1000, P3D);
   bp = new Bancdepoisson(G_nbpoisson);
   dessinercommande();
   fish = loadImage("Poisson.png");
@@ -53,6 +53,5 @@ void keyPressed()
     influ = !influ;
     else if (key == 'v' || key == 'V')
     V = !V;
-      
   dessinercommande();
 }
