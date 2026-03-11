@@ -7,12 +7,15 @@ float repulsioncoeff = 0.001;
 boolean influ = false;
 boolean V = false;
 PImage fish;
+PShape fishobj;
+
 void setup()
 {
   size(1000, 1000, P3D);
   bp = new Bancdepoisson(G_nbpoisson);
   dessinercommande();
   fish = loadImage("Poisson.png");
+  fishobj = loadShape("122658_Fish_v1_L2.obj");
   imageMode(CENTER);
 }
 

@@ -39,7 +39,8 @@ class Fish {
     angle = atan2(vitesse.y, vitesse.x);
     rotate(angle);
     fill(couleur);
-    image(fish, 0, 0, taille, taille);
+    //image(fish, 0, 0, taille, taille);
+    shape(fishobj);
     fill(255, 255, 255, 100);
     fill(0);
     text(numero, 0, 0);
