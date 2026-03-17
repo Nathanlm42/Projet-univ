@@ -4,6 +4,7 @@ int zonevoisins = 500;
 float alignement = 0.02;
 float cohesion = 0.001;
 float repulsioncoeff = 0.001;
+float profondeur = -500;
 boolean influ = false;
 boolean V = false;
 PImage fish;
@@ -11,11 +12,11 @@ PShape fishobj;
 
 void setup()
 {
-  size(1000, 1000, P3D);
+  size(700, 700, P3D);
   bp = new Bancdepoisson(G_nbpoisson);
   dessinercommande();
   fish = loadImage("Poisson.png");
-  fishobj = loadShape("122658_Fish_v1_L2.obj");
+  fishobj = loadShape("12265_Fish_v1_L2.obj");
   imageMode(CENTER);
 }
 
@@ -23,6 +24,9 @@ void setup()
 void draw()
 {
   background(#d2e8df);
+  camera(0, 0, 500,
+  width/2, height/2, -250,
+  0, 1, 0);
   bp.trouvervoisins();
   bp.avancerpoissons();
   bp.dessinerpoissons();

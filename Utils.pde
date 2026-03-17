@@ -1,7 +1,7 @@
 class Bancdepoisson
 {
   Fish poissons[];
-  Vect bary = new Vect(0,0);
+  Vect bary = new Vect(0,0, 0);
   int nbpoissons;
   Bancdepoisson(int nbpoissons)
   {
@@ -25,7 +25,8 @@ class Bancdepoisson
   {
     for (int i = 0; i < nbpoissons; i ++)
      {
-      poissons[i].avancer();
+      bary = poissons[i].calculerbary();
+      poissons[i].avancer(bary);
      }
   }
 
