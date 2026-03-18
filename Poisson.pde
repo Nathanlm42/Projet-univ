@@ -35,16 +35,14 @@ class Fish {
     {
       line(pos.x, pos.y, pos.x + vitesse.x*width/10, pos.y + vitesse.y*width/10);
     }
-    println("Poisson :" + numero + pos);
     pushMatrix();
     translate(pos.x, pos.y, pos.z);
     rotateZ(atan2(vitesse.y, vitesse.x) + PI);
-    rotateY(-atan2(-vitesse.z, sqrt(vitesse.x*vitesse.x + vitesse.y*vitesse.y)));
+    rotateY(-atan2(-vitesse.z, sqrt(vitesse.x*vitesse.x + vitesse.y*vitesse.y + vitesse.z*vitesse.z)));
     fill(couleur);
     shape(fishobj);
     fill(255, 255, 255, 100);
     fill(0);
-    text(numero, 0, 0);
     popMatrix();
   }
   void avancer(Vect bary)

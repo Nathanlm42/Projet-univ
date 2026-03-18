@@ -1,10 +1,11 @@
 Bancdepoisson bp;
-int G_nbpoisson = 200;
+int G_nbpoisson = 1000;
 int zonevoisins = 500;
 float alignement = 0.02;
 float cohesion = 0.001;
 float repulsioncoeff = 0.001;
 float profondeur = -1000;
+Vect poscamera;
 boolean influ = false;
 boolean V = false;
 PImage fish;
@@ -18,14 +19,14 @@ void setup()
   fish = loadImage("Poisson.png");
   fishobj = loadShape("12265_Fish_v1_L2.obj");
   imageMode(CENTER);
+  poscamera = new Vect(0,0,profondeur);
 }
-
 
 void draw()
 {
   background(#d2e8df);
-  camera(0, 0, 500,
-    width/2, height/2, -250,
+  camera(poscamera.x, poscamera.y, poscamera.z,
+    width/2, height/2, -profondeur,
     0, 1, 0);
   bp.trouvervoisins();
   bp.avancerpoissons();
