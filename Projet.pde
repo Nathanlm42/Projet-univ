@@ -1,9 +1,9 @@
 Bancdepoisson bp;
-int G_nbpoisson = 2000;
+int G_nbpoisson = 20;
 int zonevoisins = 100;
-float alignement = 0.02;
-float cohesion = 0.001;
-float repulsioncoeff = 0.001; // Paramètre de la simulation
+float alignement = 0.1;
+float cohesion = 0.1;
+float repulsioncoeff = 0.1; // Paramètre de la simulation
 float profondeur = -1000;
 Vect poscamera;
 PShape fishobj;
