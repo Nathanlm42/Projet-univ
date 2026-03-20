@@ -7,7 +7,7 @@ float repulsioncoeff = 0.001; // Paramètre de la simulation
 float profondeur = -1000;
 Vect poscamera;
 PShape fishobj;
-
+int frontieres;
 void setup()
 {
   size(1000, 1000, P3D);
@@ -15,6 +15,7 @@ void setup()
   dessinercommande();
   fishobj = loadShape("12265_Fish_v1_L2.obj");
   poscamera = new Vect(width/2,height/2,(width + height)/2);
+  frontieres = int(-profondeur/100);
 }
 
 void draw()

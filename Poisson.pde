@@ -8,7 +8,7 @@ class Fish {
   Fish()
   {
     vitesse = new Vect(random(-3, 3), random(-3, 3), random(-3,3));
-    pos = new Vect(random(0, width), random(0, height), random(profondeur,0));
+    pos = new Vect(random(frontieres, width - frontieres), random(frontieres, height- frontieres), random(profondeur,0));
     angle = 0;
   }
 
@@ -89,9 +89,7 @@ class Fish {
         if (dist == 0) // évite la division par zéro
           continue;
         repulsion = repulsion.m(1/(dist*dist));
-        vitesse.x += repulsion.x*repulsioncoeff; // Repousse les poissons par rapport a chacune des composantes
-        vitesse.y += repulsion.y*repulsioncoeff;
-        vitesse.z -= repulsion.z*repulsioncoeff;
+        vitesse = vitesse.add(repulsion.m(repulsioncoeff)); // Repousse les poissons par rapport a chacune des composantes
       }
     }
   }
@@ -107,30 +105,25 @@ class Fish {
       moyenne = moyenne.add(voisin.vitesse);
       i ++;
     }
-    moyenne.x /= i;
-    moyenne.y /= i;
-    moyenne.z /= i;
-    vitesse.x += moyenne.x*alignement; // Les poissons s'alignent par rapport aux vecteurs vitesse moyen des poissons
-    vitesse.y += moyenne.y*alignement;
-    vitesse.z -= moyenne.z*alignement;
+    moyenne = moyenne.m(float(1/i));
+    vitesse = vitesse.add(moyenne.m(alignement));  // Les poissons s'alignent par rapport aux vecteurs vitesse moyen des poissons
   }
   void eviterbord()
   {
-    int frontieres = int(-profondeur/10);
     float coeff = 0.01;
 
     if (pos.x >= width - frontieres) // Repousse les poissons si trop proche des bords
-      vitesse.x += ((pos.x - width))*coeff;
+      vitesse.x -= (pos.x - (width - frontieres))*coeff;
     if (pos.x <= frontieres)
-      vitesse.x += (pos.x)*coeff;
+      vitesse.x += (frontieres - pos.x)*coeff;
     if (pos.y >= height - frontieres)
-      vitesse.y += ((pos.y - height))*coeff;
+      vitesse.y -= (pos.y - (height - frontieres))*coeff;
     if (pos.y <= frontieres)
-      vitesse.y += (pos.y)*coeff;
+      vitesse.y += (frontieres - pos.y)*coeff;
     if (pos.z >= 0 - frontieres)
-      vitesse.z += (frontieres + pos.z)*coeff;
+      vitesse.z -= (pos.z + frontieres)*coeff;
     if (pos.z <= profondeur + frontieres)
-      vitesse.z -= (profondeur + frontieres - pos.z)*coeff;
+      vitesse.z += ((profondeur + frontieres) - pos.z)*coeff;
   }
   boolean isvoisins(Fish voi) // voi = voisin
   {
