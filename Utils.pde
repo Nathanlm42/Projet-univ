@@ -8,18 +8,20 @@ class Bancdepoisson
     this.nbpoissons = nbpoissons;
     poissons = new Fish[nbpoissons];
     for (int i = 0; i < nbpoissons; i ++)
-    {
-      poissons[i] = new Fish(i);
-      fill(0);
-    }
+      poissons[i] = new Fish();
+  }
+  Bancdepoisson()
+  {
+    nbpoissons = 1000;
+    poissons = new Fish[nbpoissons];
+    for (int i = 0; i < nbpoissons; i ++)
+      poissons[i] = new Fish();
+
   }
   void dessinerpoissons()
   {
     for (int i = 0; i < nbpoissons; i ++)
-    {
       poissons[i].dessiner();
-      fill(0);
-    }
   }
   void avancerpoissons()
   {
@@ -33,6 +35,6 @@ class Bancdepoisson
   void trouvervoisins()
   {
     for (int i = 0; i < nbpoissons; i ++)
-      poissons[i].trouvervoisinspoisson(poissons);
+      poissons[i].trouvervoisinspoisson(poissons); // Trouve les voisins de chaque poissons
   }
 }

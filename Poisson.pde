@@ -1,45 +1,27 @@
 class Fish {
   int taille = 20;
-  int numero;
-  color couleur = #cde8e7;
   ArrayList <Fish> voisins = new ArrayList();
   float angle;
   Vect vitesse;
   Vect pos;
 
-  Fish(int numero)
+  Fish()
   {
     vitesse = new Vect(random(-3, 3), random(-3, 3), random(-3,3));
     pos = new Vect(random(0, width), random(0, height), random(profondeur,0));
-    this.numero = numero;
     angle = 0;
   }
 
   void dessiner()
   {
-    pos.x = pos.x + vitesse.x;
-    pos.y = pos.y + vitesse.y;
-    pos.z = pos.z + vitesse.z;
+    pos = pos.add(vitesse); // Actualise la position des poissons
     pos.x = constrain(pos.x, 0, width);
-    pos.y = constrain(pos.y, 0, height);
+    pos.y = constrain(pos.y, 0, height); // Empeche le poisson de sortir du cube sur la frontière ne le repousse pas assez fort
     pos.z = constrain(pos.z, profondeur, 0);
-    if (influ)
-    {
-      for (Fish voisin : voisins)
-      {
-        fill(255, 0, 0);
-        line(voisin.pos.x, voisin.pos.y, pos.x, pos.y);
-      }
-    }
-    if (V)
-    {
-      line(pos.x, pos.y, pos.x + vitesse.x*width/10, pos.y + vitesse.y*width/10);
-    }
     pushMatrix();
-    translate(pos.x, pos.y, pos.z);
-    rotateZ(atan2(vitesse.y, vitesse.x) + PI);
+    translate(pos.x, pos.y, pos.z); // Déplace l'origine sur la position du poisson
+    rotateZ(atan2(vitesse.y, vitesse.x) + PI); // Utilisation des coordonéess sphérique afin de determiner l'angle du poisson
     rotateY(-atan2(-vitesse.z, sqrt(vitesse.x*vitesse.x + vitesse.y*vitesse.y + vitesse.z*vitesse.z)));
-    fill(couleur);
     shape(fishobj);
     fill(255, 255, 255, 100);
     fill(0);
@@ -49,10 +31,10 @@ class Fish {
   {
     vitesse.x = constrain(vitesse.x, -2, 2);
     vitesse.y = constrain(vitesse.y, -2, 2);
-    vitesse.z = constrain(vitesse.z, -2, 2);
-    alignement();
-    deplacerversbary(bary);
-    evitervoisins();
+    vitesse.z = constrain(vitesse.z, -2, 2); // Contrain la vitesse a [-2; 2]
+    alignement(); // Enclenchement l'alignement des poissons
+    deplacerversbary(bary); // Enclenche la cohésion
+    evitervoisins(); // Enclenche la répulsion
     eviterbord();
   }
 
@@ -67,42 +49,32 @@ class Fish {
   }
   Vect calculerbary()
   {
-    float moyennex = 0;
-    float moyenney = 0;
-    float moyennez = 0;
+    Vect moyenne = new Vect(0,0,0);
     int i = 0;
     if (voisins.size() == 0)
       return (new Vect(0, 0, 0));
     for (Fish voisin : voisins)
     {
-      moyennex += voisin.pos.x;
-      moyenney += voisin.pos.y;
-      moyennez += voisin.pos.z;
+      moyenne = moyenne.add(voisin.pos); // Calcul de la moyenne des positions
       i ++;
     }
-    moyennex /= i;
-    moyenney /= i;
-    moyennez /= i;
-    return (new Vect(moyennex, moyenney, moyennez));
+    moyenne = moyenne.m(float(1/i));
+    return (moyenne);
   }
   void deplacerversbary(Vect bary)
   {
-    float distx;
-    float disty;
-    float distz;
+    Vect dist = new Vect(0,0,0);
     float norm;
 
     if (bary.x == 0 && bary.y == 0 && bary.z == 0)
       return;
-    distx = bary.x - pos.x;
-    disty = bary.y - pos.y;
-    distz = bary.z - pos.z;
-    norm = dist(bary.x, bary.y, bary.z, pos.x, pos.y, pos.z);
+    dist = bary.sub(pos);
+    norm = dist.norm();
     if (norm == 0)
       return;
-    vitesse.x += cohesion*(distx/norm);
-    vitesse.y += cohesion*(disty/norm);
-    vitesse.z += cohesion*(distz/norm);
+    vitesse.x += cohesion*(dist.x/norm); // Les poissons convergent vers le barycentre de ses voisins
+    vitesse.y += cohesion*(dist.y/norm);
+    vitesse.z += cohesion*(dist.z/norm);
   }
   void evitervoisins()
   {
@@ -114,10 +86,10 @@ class Fish {
       {
         repulsion = pos.sub(voisin.pos);
         dist = dist(pos.x, pos.y, pos.z, voisin.pos.x, voisin.pos.y, voisin.pos.z);
-        if (dist == 0)
+        if (dist == 0) // évite la division par zéro
           continue;
         repulsion = repulsion.m(1/(dist*dist));
-        vitesse.x += repulsion.x*repulsioncoeff;
+        vitesse.x += repulsion.x*repulsioncoeff; // Repousse les poissons par rapport a chacune des composantes
         vitesse.y += repulsion.y*repulsioncoeff;
         vitesse.z -= repulsion.z*repulsioncoeff;
       }
@@ -125,32 +97,29 @@ class Fish {
   }
   void alignement()
   {
-    float moyennex = 0;
-    float moyenney = 0;
-    float moyennez = 0;
+    Vect moyenne = new Vect(0,0,0);
     int i = 0;
 
     if (voisins.size() == 0)
       return;
     for (Fish voisin : voisins)
     {
-      moyennex += voisin.vitesse.x;
-      moyenney += voisin.vitesse.y;
-      moyennez += voisin.vitesse.z;
+      moyenne = moyenne.add(voisin.vitesse);
       i ++;
     }
-    moyennex /= i;
-    moyenney /= i;
-    vitesse.x += moyennex*alignement;
-    vitesse.y += moyenney*alignement;
-    vitesse.z -= moyennez*alignement;
+    moyenne.x /= i;
+    moyenne.y /= i;
+    moyenne.z /= i;
+    vitesse.x += moyenne.x*alignement; // Les poissons s'alignent par rapport aux vecteurs vitesse moyen des poissons
+    vitesse.y += moyenne.y*alignement;
+    vitesse.z -= moyenne.z*alignement;
   }
   void eviterbord()
   {
-    int frontieres = 50;
+    int frontieres = int(-profondeur/10);
     float coeff = 0.01;
 
-    if (pos.x >= width - frontieres)
+    if (pos.x >= width - frontieres) // Repousse les poissons si trop proche des bords
       vitesse.x += ((pos.x - width))*coeff;
     if (pos.x <= frontieres)
       vitesse.x += (pos.x)*coeff;
@@ -166,6 +135,6 @@ class Fish {
   boolean isvoisins(Fish voi) // voi = voisin
   {
     return ( dist( pos.x, pos.y, pos.z, voi.pos.x, voi.pos.y, voi.pos.z) <= zonevoisins &&
-      dist( pos.x, pos.y, pos.z,  voi.pos.x, voi.pos.y, voi.pos.z) != 0);
+      dist( pos.x, pos.y, pos.z,  voi.pos.x, voi.pos.y, voi.pos.z) != 0); // Determine si deux poissons se situent dans leur cercle d'influence
   }
 }

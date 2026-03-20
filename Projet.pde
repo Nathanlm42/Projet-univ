@@ -1,14 +1,11 @@
 Bancdepoisson bp;
-int G_nbpoisson = 1000;
-int zonevoisins = 500;
+int G_nbpoisson = 2000;
+int zonevoisins = 100;
 float alignement = 0.02;
 float cohesion = 0.001;
-float repulsioncoeff = 0.001;
+float repulsioncoeff = 0.001; // Paramètre de la simulation
 float profondeur = -1000;
 Vect poscamera;
-boolean influ = false;
-boolean V = false;
-PImage fish;
 PShape fishobj;
 
 void setup()
@@ -16,17 +13,15 @@ void setup()
   size(1000, 1000, P3D);
   bp = new Bancdepoisson(G_nbpoisson);
   dessinercommande();
-  fish = loadImage("Poisson.png");
   fishobj = loadShape("12265_Fish_v1_L2.obj");
-  imageMode(CENTER);
-  poscamera = new Vect(0,0,profondeur);
+  poscamera = new Vect(width/2,height/2,(width + height)/2);
 }
 
 void draw()
 {
   background(#d2e8df);
   camera(poscamera.x, poscamera.y, poscamera.z,
-    width/2, height/2, -profondeur,
+    width/2, height/2, profondeur,
     0, 1, 0);
   bp.trouvervoisins();
   bp.avancerpoissons();
@@ -35,7 +30,7 @@ void draw()
 
 void dessinercommande()
 {
-  println("Bienvenue !");
+  println("Bienvenue !"); // Commandes
   println("A et Q pour l'alignement : alignement actuel :" + alignement);
   println("Z et S pour la cohesion : cohesion actuel :" + cohesion);
   println("E et D pour la répulsion : repulsion actuel :" + repulsioncoeff);
@@ -46,7 +41,7 @@ void dessinercommande()
 
 void keyPressed()
 {
-  float offset = 0.001;
+  float offset = 0.001; // gestion des touches
   if (key == 'a' || key == 'A')
     alignement += offset;
   else if (key == 'q' || key == 'Q')
@@ -59,10 +54,6 @@ void keyPressed()
     repulsioncoeff += offset;
   else if (key == 'd' || key == 'D')
     repulsioncoeff -= offset;
-  else if (key == 't' || key == 'T')
-    influ = !influ;
-  else if (key == 'v' || key == 'V')
-    V = !V;
   else if (key == 'R' ||key == 'r')
     zonevoisins += 10;
   else if (key == 'F' || key == 'f')
