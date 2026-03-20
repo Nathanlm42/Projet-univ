@@ -58,6 +58,13 @@ void keyPressed()
   else if (key == 'R' ||key == 'r')
     zonevoisins += 10;
   else if (key == 'F' || key == 'f')
+  if (key == CODED)
+  {
+    if (keyCode == UP)
+      poscamera.z += 100;
+    if (keyCode == DOWN)
+      poscamera.z -= 100;
+  }
     zonevoisins -= 10;
   dessinercommande();
 }
