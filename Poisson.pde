@@ -1,9 +1,9 @@
 class Fish {
   int taille = 20;
-  ArrayList <Fish> voisins = new ArrayList();
+  ArrayList <Fish> voisins = new ArrayList(); // Liste des voisins du poisson
   float angle;
-  Vect vitesse;
-  Vect pos;
+  Vect vitesse; // Vecteur vitesse du poisson
+  Vect pos; // Vecteur position du poisson
 
   Fish()
   {
@@ -18,6 +18,8 @@ class Fish {
     pos.x = constrain(pos.x, 0, width);
     pos.y = constrain(pos.y, 0, height); // Empeche le poisson de sortir du cube sur la frontière ne le repousse pas assez fort
     pos.z = constrain(pos.z, profondeur, 0);
+    if (influ)
+      dessinerrelation();
     pushMatrix();
     translate(pos.x, pos.y, pos.z); // Déplace l'origine sur la position du poisson
     rotateZ(atan2(vitesse.y, vitesse.x) + PI); // Utilisation des coordonéess sphérique afin de determiner l'angle du poisson
@@ -27,15 +29,22 @@ class Fish {
     fill(0);
     popMatrix();
   }
+  void dessinerrelation()
+  {
+    for(Fish voisin : voisins)
+      line(voisin.pos.x, voisin.pos.y, voisin.pos.z, pos.x, pos.y, pos.z);
+  }
   void avancer(Vect bary)
   {
-    vitesse.x = constrain(vitesse.x, -2, 2);
-    vitesse.y = constrain(vitesse.y, -2, 2);
-    vitesse.z = constrain(vitesse.z, -2, 2); // Contrain la vitesse a [-2; 2]
     alignement(); // Enclenchement l'alignement des poissons
     deplacerversbary(bary); // Enclenche la cohésion
     evitervoisins(); // Enclenche la répulsion
     eviterbord();
+
+    float vitessemax= 2;
+    float vitessef = vitesse.norm();
+    if (vitessef > vitessemax)
+      vitesse = vitesse.m(vitessemax/ vitessef); // Limite la norme de vitesse sans changer la direction
   }
 
   void trouvervoisinspoisson(Fish poissons[])
@@ -64,17 +73,16 @@ class Fish {
   void deplacerversbary(Vect bary)
   {
     Vect dist = new Vect(0,0,0);
-    float norm;
 
     if (bary.x == 0 && bary.y == 0 && bary.z == 0)
       return;
     dist = bary.sub(pos);
-    norm = dist.norm();
-    if (norm == 0)
+    dist.normalize(); // normalisation du vecteur vitesse
+    if (dist.norm ()== 0)
       return;
-    vitesse.x += cohesion*(dist.x/norm); // Les poissons convergent vers le barycentre de ses voisins
-    vitesse.y += cohesion*(dist.y/norm);
-    vitesse.z += cohesion*(dist.z/norm);
+    vitesse.x += cohesion*(dist.x); // Les poissons convergent vers le barycentre de ses voisins
+    vitesse.y += cohesion*(dist.y);
+    vitesse.z += cohesion*(dist.z);
   }
   void evitervoisins()
   {

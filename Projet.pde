@@ -8,6 +8,7 @@ float profondeur = -1000;
 Vect poscamera;
 PShape fishobj;
 int frontieres;
+boolean influ;
 void setup()
 {
   size(1000, 1000, P3D);
@@ -43,6 +44,16 @@ void dessinercommande()
 void keyPressed()
 {
   float offset = 0.001; // gestion des touches
+  if (key == CODED)
+  {
+    if (keyCode == UP)
+      poscamera.z += 100;
+    else if (keyCode == DOWN)
+      poscamera.z -= 100;
+    dessinercommande();
+    return;
+  }
+
   if (key == 'a' || key == 'A')
     alignement += offset;
   else if (key == 'q' || key == 'Q')
@@ -58,14 +69,8 @@ void keyPressed()
   else if (key == 'R' ||key == 'r')
     zonevoisins += 10;
   else if (key == 'F' || key == 'f')
-  if (key == CODED)
-  {
-    if (keyCode == UP)
-      poscamera.z += 100;
-    if (keyCode == DOWN)
-      poscamera.z -= 100;
-  }
     zonevoisins -= 10;
+  else if(key == 'T' ||key == 't')
+    influ = !influ;
   dessinercommande();
 }
-

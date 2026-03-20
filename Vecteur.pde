@@ -35,8 +35,12 @@ class Vect
   }
   void normalize()
   {
-    x/=norm();
-    y/=norm();
+    float n = norm();
+    if (n == 0)
+      return;
+    x /= n;
+    y /= n;
+    z /= n;
   }
   String toString()
   {
