@@ -1,5 +1,5 @@
 Bancdepoisson bp;
-int G_nbpoisson = 200;
+int G_nbpoisson = 2000;
 int zonevoisins = 500;
 float alignement = 0.02;
 float cohesion = 0.001;
