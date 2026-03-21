@@ -1,5 +1,5 @@
 Bancdepoisson bp;
-int G_nbpoisson = 20;
+int G_nbpoisson = 200;
 int zonevoisins = 100;
 float alignement = 0.1;
 float cohesion = 0.1;
@@ -47,9 +47,9 @@ void keyPressed()
   if (key == CODED)
   {
     if (keyCode == UP)
-      poscamera.z += 100;
-    else if (keyCode == DOWN)
       poscamera.z -= 100;
+    else if (keyCode == DOWN)
+      poscamera.z += 100;
     dessinercommande();
     return;
   }
